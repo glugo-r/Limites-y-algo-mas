@@ -2,7 +2,7 @@ Límites y algo mas
 
 Curso: MCA 1 2026-1 FCiencias
 
-Software: Google colab
+Software: Google colab / Python 3.12.12
 
 Editor: Gabriel Lugo Rosete
 
