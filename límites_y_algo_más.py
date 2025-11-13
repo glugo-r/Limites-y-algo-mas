@@ -14,66 +14,62 @@ x = np.linspace(-12, 12, 400)
 y = x**2
 
 a = 6
-a2= a**2
+a2 = a**2
 ks = [25, 49]
 
 fig, axs = plt.subplots(3, 2, figsize=(12, 10))
-fig.suptitle('|x^2 - 6^2| comparado con 25 y 49', fontsize=16)
+fig.suptitle('|x² - 6²| comparado con 25 y 49', fontsize=16)
 
 def shade_intervals(ax, intervals, color, label):
-  for inter in intervals:
-    if np.isfinite(inter[0]) and np.isfinite(inter[1]):
-      ax.axvspan(inter[0], inter[1], alpha=0.3, color=color, label=label)
-    elif np.isneginf(inter[0]):
-      ax.axvspan(-12, inter[1], alpha = 0.3, color=color, label=label)
-    elif np.isposinf(inter[1]):
-      ax.axvspan(inter[0], 12, alpha = 0.3, color=color, label=label)
+    for inter in intervals:
+        if np.isfinite(inter[0]) and np.isfinite(inter[1]):
+            ax.axvspan(inter[0], inter[1], color=color, alpha=0.3, label=label)
+        elif np.isneginf(inter[0]):  # (-inf, b)
+            ax.axvspan(-12, inter[1], color=color, alpha=0.3, label=label)
+        elif np.isposinf(inter[1]):  # (a, inf)
+            ax.axvspan(inter[0], 12, color=color, alpha=0.3, label=label)
 
 for i, k in enumerate(ks):
+    sols_eq = []
+    if 36 - k > 0:
+        sols_eq += [-np.sqrt(36 - k), np.sqrt(36 - k)]
+    sols_eq += [-np.sqrt(36 + k), np.sqrt(36 + k)]
 
-  sols_eq = []
-  if 36 - k > 0:
-    sols_eq += [-np.sqrt(36-k), np.sqrt(36-k)]
-  sols_eq += [-np.sqrt(36+k), np.sqrt(36+k)]
+    lower = max(0, 36 - k)
+    upper = 36 + k
+    sols_lt = []
+    if 36 - k > 0:
+        sols_lt = [(-np.sqrt(upper), -np.sqrt(lower)), (np.sqrt(lower), np.sqrt(upper))]
+    else:
+        sols_lt = [(-np.sqrt(upper), np.sqrt(upper))]
 
-  lower = max(0, 36-k)
-  upper = 36 + k
-  sols_lt = []
-  if 36-k > 0:
-    sols_lt += [(-np.sqrt(upper), np.sqrt(lower)), (-np.sqrt(lower), np.sqrt(upper))]
-  else:
-    sols_lt =  [(-np.sqrt(upper), np.sqrt(upper))]
+    sols_gt = []
+    if 36 - k > 0:
+        sols_gt = [(-np.inf, -np.sqrt(36 + k)), (-np.sqrt(36 - k), np.sqrt(36 - k)), (np.sqrt(36 + k), np.inf)]
+    else:
+        sols_gt = [(-np.inf, -np.sqrt(36 + k)), (np.sqrt(36 + k), np.inf)]
 
-  sols_gt = []
-  if 36 - k > 0:
-    sols_gt = [(-np.inf, -np.sqrt(36+k)), (-np.sqrt(36-k), np.sqrt(36-k)), (np.sqrt(36+k), np.inf)]
-  else:
-    sols_gt = [(-np.inf, -np.sqrt(36+k)), (np.sqrt(36+k), np.inf)]
+    ax_lt = axs[0, i]
+    ax_lt.set_title(f'|x² - 36| < {k}')
+    shade_intervals(ax_lt, sols_lt, 'green', 'Solución')
+    ax_lt.axhline(0, color='black', linewidth=0.8)
+    ax_lt.set_xlim(-12, 12)
+    ax_lt.set_ylim(-0.5, 0.5)
 
-  ax_lt = axs[0,i]
-  ax_lt.set_title(f'|x^2 - 36| < {k}')
-  shade_intervals(ax_lt, sols_lt, 'green', 'Solución')
-  ax_lt.axhline(0, color='black', linewidth=0.8)
-  ax_lt.set_xlim(-12, 12)
-  ax_lt.set_ylim(-0.5, 0.5)
-  ax_lt.legend()
+    ax_gt = axs[1, i]
+    ax_gt.set_title(f'|x² - 36| > {k}')
+    shade_intervals(ax_gt, sols_gt, 'orange', 'Solución')
+    ax_gt.axhline(0, color='black', linewidth=0.8)
+    ax_gt.set_xlim(-12, 12)
+    ax_gt.set_ylim(-0.5, 0.5)
 
-  ax_gt = axs[1,i]
-  ax_gt.set_title(f'|x^2 - 36| > {k}')
-  shade_intervals(ax_gt, sols_gt, 'orange', 'Solución')
-  ax_gt.axhline(0, color='black', linewidth=0.8)
-  ax_gt.set_xlim(-12, 12)
-  ax_gt.set_ylim(-0.5, 0.5)
-  ax_gt.legend()
-
-  ax_eq = axs[2,i]
-  ax_eq.set_title(f'|x^2 - 36| = {k}')
-  for s in sols_eq:
-    ax_eq.plot(s, 0, 'ro', label='Solución' if s == sols_eq[0] else "")
-  ax_eq.axhline(0, color='black', linewidth=0.8)
-  ax_eq.set_xlim(-12, 12)
-  ax_eq.set_ylim(-0.5, 0.5)
-  ax_eq.legend()
+    ax_eq = axs[2, i]
+    ax_eq.set_title(f'|x² - 36| = {k}')
+    for s in sols_eq:
+        ax_eq.plot(s, 0, 'ro', label='Solución' if s == sols_eq[0] else "")
+    ax_eq.axhline(0, color='black', linewidth=0.8)
+    ax_eq.set_xlim(-12, 12)
+    ax_eq.set_ylim(-0.5, 0.5)
 
 plt.tight_layout()
 plt.show()
